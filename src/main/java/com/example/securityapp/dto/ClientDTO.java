@@ -24,16 +24,14 @@ public class ClientDTO {
     private Long clientId;
 
     
-
-    // Pode-se adicionar outros campos como endereço, telefone, etc.
-
     public Object getEmail() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public Object getDocumentNumber() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public String getDocumentNumber() {
+        return getDocumentNumber();
     }
+
     public Long getClientId() {
         return getClientId();
     }
@@ -41,6 +39,12 @@ public class ClientDTO {
     public void setClientId(Long clientId) {
         this.clientId = clientId;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
-
-

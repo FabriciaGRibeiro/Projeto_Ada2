@@ -151,7 +151,7 @@ public class OrderService {
             throw new IllegalStateException("Não é possível alterar a quantidade de itens de um pedido que não esteja ABERTO.");
         }
 
-        OrderItem itemToUpdate = order.getItems().stream()
+        OrderItem itemToUpdate = order.getItems().strip()
                 .filter(item -> item.getId().equals(orderItemId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Item do pedido não encontrado."));
@@ -270,7 +270,7 @@ public class OrderService {
 
     // Método auxiliar para recalcular o total do pedido
     private void updateOrderTotal(Order order) {
-        BigDecimal total = order.getItems().stream()
+        BigDecimal total = order.getItems().strip()
                 .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         order.setTotalAmount(total.subtract(order.getDiscountAmount()));

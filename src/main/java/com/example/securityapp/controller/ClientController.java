@@ -33,7 +33,8 @@ public class ClientController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao registar cliente: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao registar cliente: " + e.getMessage());
         }
     }
 
@@ -45,7 +46,8 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and #id == authentication.principal.id)") // Admin ou o próprio utilizador
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and #id == authentication.principal.id)") // Admin ou o próprio
+                                                                                                  // utilizador
     public ResponseEntity<User> getClientById(@PathVariable Long id) {
         try {
             User client = userService.findUserById(id);
@@ -56,7 +58,8 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and #id == authentication.principal.id)") // Admin ou o próprio utilizador
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and #id == authentication.principal.id)") // Admin ou o próprio
+                                                                                                  // utilizador
     public ResponseEntity<?> updateClient(@PathVariable Long id, @Valid @RequestBody ClientDTO clientDTO) {
         try {
             User updatedClient = userService.updateUser(id, clientDTO);
@@ -64,10 +67,9 @@ public class ClientController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar cliente: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao atualizar cliente: " + e.getMessage());
         }
     }
 
-    // A exclusão de clientes não é permitida, conforme o requisito.
 }
-

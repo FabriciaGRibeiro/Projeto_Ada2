@@ -49,6 +49,9 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
+    public List<OrderItem> getItems() {
+    return items;
+
     public void setClient(User client) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -81,7 +84,7 @@ public class Order {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public Object getItems() {
+    public List getItems() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -121,4 +124,3 @@ public class Order {
         DELIVERED
     }
 }
-

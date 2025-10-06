@@ -63,5 +63,9 @@ public class User {
     public String getPassword() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    public void setName(String name) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
 
