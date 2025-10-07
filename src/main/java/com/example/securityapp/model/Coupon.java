@@ -81,7 +81,7 @@ public class Coupon {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public Object getDiscountValue() {
+    public BigDecimal getDiscountValue() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

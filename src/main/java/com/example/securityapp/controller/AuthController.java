@@ -31,6 +31,12 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
+    public AuthController() {
+        this.authenticationManager = null;
+        this.userService = null;
+        this.jwtTokenProvider = null;
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationDTO registrationDTO) {
         try {
@@ -46,7 +52,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> authenticateUser(@Valid @RequestBody LoginRequestDTO loginRequestDTO){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+        final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequestDTO.getEmail(), loginRequestDTO.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);

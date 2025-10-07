@@ -88,7 +88,7 @@ public class Order {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public Object getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -114,7 +114,7 @@ public class Order {
     public BigDecimal getDiscountAmount() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
+   
     public enum OrderStatus {
         OPEN,
         PENDING_PAYMENT,

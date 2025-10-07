@@ -213,14 +213,18 @@ public class OrderService {
         updateOrderTotal(order);
 
         BigDecimal discount = BigDecimal.ZERO;
+
         if (coupon.getDiscountType() == Coupon.DiscountType.PERCENTAGE) {
             BigDecimal discountPercentage = coupon.getDiscountValue();
-            BigDecimal discount = order.getTotalAmount()
+            discount = order.getTotalAmount()
                     .multiply(discountPercentage)
                     .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+
             order.setDiscountAmount(discount);
+
         } else if (coupon.getDiscountType() == Coupon.DiscountType.FIXED) {
-    order.setDiscountAmount(coupon.getDiscountValue());
+            discount = coupon.getDiscountValue();
+            order.setDiscountAmount(discount);
         }
 
         order.setDiscountAmount(discount);
