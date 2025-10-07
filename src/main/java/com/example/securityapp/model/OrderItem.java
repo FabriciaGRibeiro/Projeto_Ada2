@@ -48,11 +48,19 @@ public class OrderItem {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public Object getProduct() {
+    public Product getProduct() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void setUnitPrice(BigDecimal unitPrice) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Object getUnitPrice() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Object getId() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -6,6 +6,11 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+import jakarta.persistence.Id;
 
 @Data
 public class OrderItemDTO {
@@ -41,4 +46,5 @@ public class OrderItemDTO {
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
+
 }

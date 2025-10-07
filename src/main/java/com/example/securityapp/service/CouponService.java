@@ -74,11 +74,11 @@ public class CouponService {
         return couponRepository.save(existingCoupon);
     }
 
-    public boolean isValid(Coupon coupon, BigDecimal orderAmount) {
+    public boolean isValid(Coupon coupon, Object orderAmount) {
         if (!coupon.isActive() || (coupon.getExpirationDate() != null && ((LocalDate) coupon.getExpirationDate()).isBefore(LocalDate.now()))) {
             return false; // Cupom inativo ou expirado
         }
-        if (coupon.getMinOrderAmount() != null && orderAmount.compareTo((BigDecimal) coupon.getMinOrderAmount()) < 0) {
+        if (coupon.getMinOrderAmount() != null && ((BigDecimal) orderAmount).compareTo((BigDecimal) coupon.getMinOrderAmount()) < 0) {
             return false; // Valor mínimo do pedido não atingido
         }
         return true;

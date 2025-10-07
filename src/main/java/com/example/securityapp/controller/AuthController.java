@@ -1,19 +1,28 @@
 package com.example.securityapp.controller;
 
-import com.example.securityapp.dto.LoginRequestDTO;
-import com.example.securityapp.dto.UserRegistrationDTO;
-import com.example.securityapp.model.User;
-import com.example.securityapp.security.JwtTokenProvider;
-import com.example.securityapp.service.UserService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.example.securityapp.dto.LoginRequestDTO;
+import com.example.securityapp.dto.UserRegistrationDTO;
+import com.example.securityapp.model.User;
+import com.example.securityapp.security.JwtTokenProvider;
+import com.example.securityapp.service.UserService;
+
+import jakarta.validation.Valid;
+import lombok.Data;
+
+@Data
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -21,12 +30,6 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
-
-    public AuthController(UserService userService, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
-        this.userService = userService;
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationDTO registrationDTO) {

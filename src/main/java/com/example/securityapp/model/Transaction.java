@@ -63,5 +63,9 @@ public class Transaction {
       // TODO Auto-generated method stub
       throw new UnsupportedOperationException("Unimplemented method 'setPaymentMethod'");
     }
+
+    public Object getStatus() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
 

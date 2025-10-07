@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "User")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -49,8 +49,12 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
+    /**
+     * @return
+     */
     public List<OrderItem> getItems() {
-    return items;
+        return items;
+    }
 
     public void setClient(User client) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -84,15 +88,22 @@ public class Order {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public List getItems() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     public Object getTotalAmount() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public Object getClient() {
+    public User getClient() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public User getName() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Double getId() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    public User getEmail() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

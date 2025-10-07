@@ -81,9 +81,12 @@ public class Coupon {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    public Object getDiscountValue() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     public enum DiscountType {
         PERCENTAGE,
         FIXED
     }
 }
-

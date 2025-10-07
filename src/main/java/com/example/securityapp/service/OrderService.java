@@ -13,12 +13,13 @@ import com.example.securityapp.repository.OrderRepository;
 import com.example.securityapp.repository.ProductRepository;
 import com.example.securityapp.repository.UserRepository;
 
-import jakarta.transaction.Transaction;
+import com.example.securityapp.model.Transaction;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +35,9 @@ public class OrderService {
     private final CouponService couponService;
     private final PaymentService paymentService;
 
-    public OrderService(OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository, OrderItemRepository orderItemRepository, EmailService emailService, CouponService couponService, PaymentService paymentService) {
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository,
+            ProductRepository productRepository, OrderItemRepository orderItemRepository, EmailService emailService,
+            CouponService couponService, PaymentService paymentService) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
@@ -129,7 +132,7 @@ public class OrderService {
             throw new IllegalStateException("Não é possível remover itens de um pedido que não esteja ABERTO.");
         }
 
-        User itemToRemove = ((Optional<User>) order.getItems()).stream()
+        OrderItem itemToRemove = order.getItems().stream()
                 .filter(item -> item.getId().equals(orderItemId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Item do pedido não encontrado."));
@@ -138,21 +141,23 @@ public class OrderService {
         orderItemRepository.delete(itemToRemove);
         updateOrderTotal(order);
         orderRepository.save(order);
+
     }
 
     @Transactional
     public OrderItem updateItemQuantity(Long orderId, Long orderItemId, Integer newQuantity) {
         if (newQuantity <= 0) {
-            throw new IllegalArgumentException("A quantidade deve ser no mínimo 1. Para remover, use a função de remover item.");
+            throw new IllegalArgumentException(
+                    "A quantidade deve ser no mínimo 1. Para remover, use a função de remover item.");
         }
 
         Order order = findOrderById(orderId);
         if (order.getStatus() != Order.OrderStatus.OPEN) {
-            throw new IllegalStateException("Não é possível alterar a quantidade de itens de um pedido que não esteja ABERTO.");
+            throw new IllegalStateException(
+                    "Não é possível alterar a quantidade de itens de um pedido que não esteja ABERTO.");
         }
 
-        OrderItem itemToUpdate = order.getItems().strip()
-                .filter(item -> item.getId().equals(orderItemId))
+        OrderItem itemToUpdate = order.getItems().stream().filter(item -> item.getId().equals(orderItemId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Item do pedido não encontrado."));
 
@@ -169,7 +174,7 @@ public class OrderService {
         if (order.getItems().isEmpty()) {
             throw new IllegalStateException("O pedido deve ter ao menos um item para ser finalizado.");
         }
-        if (order.getTotalAmount().compareTo(BigDecimal.ZERO) <= 0) {
+        if (((BigDecimal) order.getTotalAmount()).compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalStateException("O valor total do pedido deve ser maior que zero para ser finalizado.");
         }
         if (order.getStatus() != Order.OrderStatus.OPEN) {
@@ -182,8 +187,9 @@ public class OrderService {
 
         // Notificar o cliente via e-mail
         String subject = "Seu pedido foi finalizado e aguarda pagamento!";
-        String body = String.format("Olá %s,\n\nSeu pedido #%d foi finalizado com sucesso e está aguardando pagamento. O valor total é de %.2f.\n\nObrigado!",
-                ((Product) order.getClient()).getName(), order.getId(), order.getTotalAmount());
+        String body = String.format(
+                "Olá %s,\n\nSeu pedido #%d foi finalizado com sucesso e está aguardando pagamento. O valor total é de %.2f.\n\nObrigado!",
+                (order.getClient()), order.getName(), order.getId(), order.getTotalAmount());
         emailService.sendEmail(order.getClient().getEmail(), subject, body);
 
         return order;
@@ -208,9 +214,13 @@ public class OrderService {
 
         BigDecimal discount = BigDecimal.ZERO;
         if (coupon.getDiscountType() == Coupon.DiscountType.PERCENTAGE) {
-            discount = order.getTotalAmount().multiply(coupon.getDiscountValue().divide(BigDecimal.valueOf(100)));
+            BigDecimal discountPercentage = coupon.getDiscountValue();
+            BigDecimal discount = order.getTotalAmount()
+                    .multiply(discountPercentage)
+                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+            order.setDiscountAmount(discount);
         } else if (coupon.getDiscountType() == Coupon.DiscountType.FIXED) {
-            discount = coupon.getDiscountValue();
+    order.setDiscountAmount(coupon.getDiscountValue());
         }
 
         order.setDiscountAmount(discount);
@@ -222,7 +232,8 @@ public class OrderService {
     public Order processOrderPayment(Long orderId, PaymentRequestDTO paymentRequestDTO) {
         Order order = findOrderById(orderId);
 
-        if (order.getStatus() != Order.OrderStatus.PENDING_PAYMENT || order.getPaymentStatus() != Order.PaymentStatus.PENDING) {
+        if (order.getStatus() != Order.OrderStatus.PENDING_PAYMENT
+                || order.getPaymentStatus() != Order.PaymentStatus.PENDING) {
             throw new IllegalStateException("O pedido não está no status 'Aguardando pagamento' para ser pago.");
         }
 
@@ -236,8 +247,9 @@ public class OrderService {
 
             // Notificar o cliente sobre o pagamento
             String subject = "Pagamento do seu pedido foi confirmado!";
-            String body = String.format("Olá %s,\n\nO pagamento do seu pedido #%d no valor de %.2f foi confirmado com sucesso!\n\nObrigado!",
-                    order.getClient().getName(), order.getId(), order.getTotalAmount());
+            String body = String.format(
+                    "Olá %s,\n\nO pagamento do seu pedido #%d no valor de %.2f foi confirmado com sucesso!\n\nObrigado!",
+                    order.getClient(), order.getName(), order.getId(), order.getTotalAmount());
             emailService.sendEmail(order.getClient().getEmail(), subject, body);
         } else {
             order.setPaymentStatus(Order.PaymentStatus.DECLINED);
@@ -262,7 +274,7 @@ public class OrderService {
         // Notificar o cliente sobre a entrega
         String subject = "Seu pedido foi entregue!";
         String body = String.format("Olá %s,\n\nSeu pedido #%d foi entregue com sucesso!\n\nObrigado!",
-                ((Product) order.getClient()).getName(), order.getId());
+                (order.getClient()), order.getName(), order.getId());
         emailService.sendEmail(order.getClient().getEmail(), subject, body);
 
         return order;
@@ -270,10 +282,9 @@ public class OrderService {
 
     // Método auxiliar para recalcular o total do pedido
     private void updateOrderTotal(Order order) {
-        BigDecimal total = order.getItems().strip()
-                .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+        BigDecimal total = order.getItems().stream()
+                .map(item -> ((BigDecimal) item.getUnitPrice()).multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        order.setTotalAmount(total.subtract(order.getDiscountAmount()));
+
     }
 }
-

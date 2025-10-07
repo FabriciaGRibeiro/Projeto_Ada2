@@ -33,5 +33,25 @@ public class Product {
     public boolean isActive() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    public Object getId() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void setName(String name) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void setDescription(String description) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void setPrice(BigDecimal price) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void setActive(boolean active) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
 
