@@ -139,7 +139,7 @@ my-security-app/
     └── vite.config.js
 ```
 
-## Endpoints da API (Exemplos)
+## Endpoints da API 
 
 Para uma lista completa e detalhada dos endpoints, consulte `documentacao_api_ecommerce_integrada.md`.
 
@@ -157,5 +157,6 @@ Sinta-se à vontade para clonar o repositório, explorar o código e sugerir mel
 ## Licença
 
 Este projeto está licenciado sob a licença MIT. Consulte o arquivo `LICENSE` para mais detalhes.
+
 
 
